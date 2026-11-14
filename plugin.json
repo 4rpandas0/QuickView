@@ -1,0 +1,19 @@
+{
+  "id": "com.arpan.quickview",
+  "name": "QuickView",
+  "version": "0.2.1",
+  "main": "main.js",
+  "minVersionCode": 967,
+  "author": {
+    "name": "Arpan"
+  },
+  "license": "MIT",
+  "price": 0,
+  "keywords": [
+    "browser",
+    "webview",
+    "url",
+    "localhost",
+    "quickview"
+  ]
+}
