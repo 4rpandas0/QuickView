@@ -1,9 +1,17 @@
 {
   "id": "com.arpan.quickview",
   "name": "QuickView",
-  "version": "0.2.1",
+  "version": "0.3.2",
   "main": "main.js",
+  "readme": "README.md",
   "minVersionCode": 967,
+  "files": [
+    "src/styles.css",
+    "src/template.js",
+    "src/theme.js",
+    "src/browser.js",
+    "src/toolbar.js"
+  ],
   "author": {
     "name": "Arpan"
   },

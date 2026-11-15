@@ -1,0 +1,80 @@
+/* QuickView styles. Loaded by main.js as a normal stylesheet.
+   Colours come from Acode's theme variables when present, otherwise from the --qv-* tokens below. */
+
+#quickview {
+  --qv-bg:#f5f6fa; --qv-surface:#ffffff; --qv-fg:#202431; --qv-muted:#758096;
+  --qv-border:#e4e7ef; --qv-accent:#3978ee; --qv-accent-fg:#ffffff;
+  --qv-note-bg:#fff2ce; --qv-note-fg:#654c17; --qv-shadow:#0002; --qv-stage:#ffffff;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark) {
+  #quickview:not([data-theme="light"]) {
+    --qv-bg:#16181d; --qv-surface:#21252d; --qv-fg:#e6e9f0; --qv-muted:#9aa4b8;
+    --qv-border:#343a46; --qv-accent:#6b9cff; --qv-accent-fg:#0b1220;
+    --qv-note-bg:#3a3118; --qv-note-fg:#f2dca0; --qv-shadow:#0008; --qv-stage:#16181d;
+    color-scheme:dark;
+  }
+}
+#quickview[data-theme="dark"] {
+  --qv-bg:#16181d; --qv-surface:#21252d; --qv-fg:#e6e9f0; --qv-muted:#9aa4b8;
+  --qv-border:#343a46; --qv-accent:#6b9cff; --qv-accent-fg:#0b1220;
+  --qv-note-bg:#3a3118; --qv-note-fg:#f2dca0; --qv-shadow:#0008; --qv-stage:#16181d;
+  color-scheme:dark;
+}
+
+#quickview {
+  height:100%; min-height:0; display:flex; flex-direction:column;
+  color:var(--primary-text-color,var(--qv-fg));
+  background:var(--background-color,var(--qv-bg));
+  font-family:system-ui,-apple-system,sans-serif; overflow:hidden;
+}
+#quickview * { box-sizing:border-box; }
+#quickview button { font:inherit; cursor:pointer; }
+
+.qv-head { display:flex; align-items:center; justify-content:space-between; padding:12px; }
+.qv-brand { display:flex; align-items:center; gap:9px; font-weight:750; }
+.qv-logo { width:29px;height:29px;display:grid;place-items:center;border-radius:9px;background:var(--qv-accent);color:var(--qv-accent-fg);font-weight:800; }
+.qv-new { border:0;border-radius:9px;width:34px;height:34px;background:var(--secondary-background-color,var(--qv-surface));color:inherit;font-size:22px; }
+
+.qv-tabs { display:flex;gap:7px;padding:0 12px 10px; }
+.qv-tab { flex:1;min-width:0;padding:10px;border:1px solid var(--border-color,var(--qv-border));border-radius:10px;background:var(--secondary-background-color,var(--qv-surface));color:var(--secondary-text-color,var(--qv-muted));text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12px; }
+.qv-tab.active { color:var(--primary-text-color,var(--qv-fg));border-color:var(--qv-accent);background:color-mix(in srgb,var(--qv-accent) 14%,var(--secondary-background-color,var(--qv-surface)));font-weight:700; }
+
+.qv-address { margin:0 12px 8px;display:flex;align-items:center;gap:8px;padding:5px 6px 5px 11px;border:1px solid var(--border-color,var(--qv-border));border-radius:12px;background:var(--secondary-background-color,var(--qv-surface)); }
+.qv-address span { color:var(--secondary-text-color,var(--qv-muted)); }
+.qv-address input { flex:1;min-width:0;border:0;outline:0;background:transparent;color:var(--primary-text-color,var(--qv-fg));font-size:13px; }
+.qv-address input::placeholder { color:var(--secondary-text-color,var(--qv-muted));opacity:.8; }
+.qv-go { border:0;border-radius:8px;padding:8px 13px;background:var(--qv-accent);color:var(--qv-accent-fg);font-size:12px;font-weight:700; }
+
+.qv-tools { display:flex;align-items:center;gap:4px;padding:0 10px 9px;border-bottom:1px solid var(--border-color,var(--qv-border)); }
+.qv-tool { width:34px;height:32px;border:0;border-radius:8px;background:transparent;color:inherit;font-size:21px; }
+.qv-tool:active { background:var(--border-color,var(--qv-border)); }
+.qv-tool.active { background:color-mix(in srgb,var(--qv-accent) 18%,transparent); }
+.qv-spacer { flex:1; }
+
+/* Thin indeterminate bar shown while a page is loading. */
+.qv-progress { position:relative;height:2px;overflow:hidden;flex:none; }
+#quickview.loading .qv-progress::before {
+  content:"";position:absolute;top:0;bottom:0;left:-35%;width:35%;
+  background:var(--qv-accent);animation:qv-slide 1s ease-in-out infinite;
+}
+@keyframes qv-slide { from { left:-35%; } to { left:100%; } }
+
+.qv-stage { position:relative;flex:1;min-height:0;background:var(--qv-stage);overflow:hidden;touch-action:pan-y; }
+/* Embedded sites assume a white canvas, so the frame stays white in both themes. */
+.qv-frame { position:absolute;inset:0;width:100%;height:100%;border:0;background:white;color-scheme:light; }
+.qv-frame.hidden { display:none; }
+.qv-desktop .qv-frame:not(.hidden) { width:1280px;max-width:none;transform-origin:top left; }
+
+.qv-note { position:absolute;z-index:2;left:9px;right:9px;bottom:9px;padding:9px 10px;border-radius:8px;background:var(--qv-note-bg);color:var(--qv-note-fg);font-size:11px;line-height:1.4; }
+
+.qv-drawer { display:none;position:absolute;z-index:5;left:0;right:0;bottom:0;max-height:48%;overflow:auto;padding:11px;background:var(--secondary-background-color,var(--qv-surface));border-top:1px solid var(--border-color,var(--qv-border));box-shadow:0 -8px 22px var(--qv-shadow); }
+.qv-drawer.open { display:block; }
+.qv-drawer-title { display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:700;margin-bottom:8px; }
+.qv-drawer button { border:0;border-radius:8px;padding:7px 10px;background:var(--qv-accent);color:var(--qv-accent-fg);font-size:11px; }
+.qv-console-output,.qv-local-results { font:11px/1.5 ui-monospace,monospace;overflow-wrap:anywhere; }
+.qv-line { padding:4px 2px;border-bottom:1px solid var(--border-color,var(--qv-border)); }
+.qv-muted { color:var(--secondary-text-color,var(--qv-muted));font-size:11px; }
+
+.qv-status { display:flex;justify-content:space-between;gap:8px;padding:7px 12px;border-top:1px solid var(--border-color,var(--qv-border));color:var(--secondary-text-color,var(--qv-muted));font-size:10px; }
+.qv-status span:first-child { min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap; }
