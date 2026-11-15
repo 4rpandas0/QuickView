@@ -12,9 +12,21 @@
       return !!(mq && mq.matches);
     }
 
-    // Brightness of Acode's --background-color, or "" if it can't be read.
+    // --background-color from Acode's theme. The page is detached until it is first shown, and a detached
+    // element has no computed style, so fall back to the document root.
+    function readBackground() {
+      for (const el of [host, document.documentElement]) {
+        try {
+          const value = getComputedStyle(el).getPropertyValue("--background-color").trim();
+          if (value) return value;
+        } catch (_) {}
+      }
+      return "";
+    }
+
+    // "dark" or "light" from the brightness of that colour, or "" if it can't be read.
     function acodeTheme() {
-      const raw = getComputedStyle(host).getPropertyValue("--background-color").trim();
+      const raw = readBackground();
       if (!raw) return "";
       const probe = document.createElement("span");
       probe.style.color = raw;

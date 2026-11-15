@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.4.0
+- New minimal UI: a single bar with address box, Go and a three-dot menu. Tabs, brand row, tool row and status bar are gone.
+- Pages now load through Acode's native WebView (any site), then the in-app browser, with the embedded iframe as the last option. Blocked iframes open natively on their own.
+- Start screen lists recent pages.
+- Header icon taps are detected at document level, so Acode's header can't swallow them.
+- Theme detection works before the page is first shown.
+- Open in system browser uses `system.openInBrowser`.
+
 ## 0.3.2
 - Detects pages that failed to load (blank frame or a Content-Security-Policy block) and says so in the status bar instead of "loaded".
 - Console drawer now logs the app's CSP, the frame sandbox and any security-policy violations.
