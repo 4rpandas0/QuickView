@@ -1,9 +1,9 @@
 {
   "id": "com.arpan.quickview",
   "name": "QuickView",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "main": "main.js",
-  "readme": "README.md",
+  "readme": "readme.md",
   "minVersionCode": 967,
   "files": [
     "src/styles.css",
@@ -28,5 +28,6 @@
     "search",
     "quickview"
   ],
-  "icon": "icon.png"
+  "icon": "icon.png",
+  "repository": "https://github.com/4rpandas0/QuickView"
 }

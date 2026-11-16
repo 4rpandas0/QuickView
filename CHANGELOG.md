@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.4
+- `README.md` renamed to `readme.md` and declared that way in the manifest. Android ignores case, so the uppercase name worked on a phone, but the store reads the zip on a case-sensitive filesystem and could not find it — which is why the description vanished from the plugin page after installing.
+- Added the `repository` field, so the listing links back to the source.
+
 ## 1.0.3
 - README rewritten for people using the plugin rather than reading its code: how to install and open it, how to set up Seekr with a SerpApi key, how searching works, the two tabs, the menu, the console and what happens on sites that refuse to open.
 

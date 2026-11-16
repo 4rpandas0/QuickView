@@ -23,7 +23,7 @@
   const LOAD_HINT_MS = 15000;
   const KEY_TABS = "quickview.tabs";
   const MAX_TABS = 2;
-  const VERSION = "1.0.3";
+  const VERSION = "1.0.4";
 
   const store = {
     get(key) { try { return localStorage.getItem(key); } catch (_) { return null; } },
