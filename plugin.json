@@ -1,7 +1,7 @@
 {
   "id": "com.arpan.quickview",
   "name": "QuickView",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "main.js",
   "readme": "README.md",
   "minVersionCode": 967,
@@ -10,7 +10,8 @@
     "src/template.js",
     "src/theme.js",
     "src/browser.js",
-    "src/toolbar.js"
+    "src/toolbar.js",
+    "icon.png"
   ],
   "author": {
     "name": "Arpan"
@@ -24,5 +25,6 @@
     "localhost",
     "search",
     "quickview"
-  ]
+  ],
+  "icon": "icon.png"
 }

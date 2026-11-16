@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.1
+- Added an icon: a blue browser window with tabs behind it and a globe inside, on a dark rounded tile. It ships as `icon.png` and is declared in `plugin.json`.
+
 ## 1.0.0
 - First release. One bar at the top of the screen with a tab button, an address box and a menu, and pages rendered in an iframe inside the plugin page.
 - Home and search are Seekr (`https://seekr-4t0mj3.v2.appdeploy.ai/`); anything typed that isn't an address becomes a search there.

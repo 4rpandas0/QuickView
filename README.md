@@ -1,4 +1,4 @@
-# QuickView 1.0.0 — Minimal browser for Acode
+# QuickView 1.0.1 — Minimal browser for Acode
 
 One line at the top of the screen: a tab button, an address box, and a menu. Pages open in an iframe inside the
 plugin page, so the bar and the page live in the same place.
