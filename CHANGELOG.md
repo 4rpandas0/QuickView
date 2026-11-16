@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.2
+- Author details in `plugin.json`: name, email (`4rpandas0@gmail.com`) and GitHub account (`4rpandas0`), so the marketplace listing links back to the source.
+
 ## 1.0.1
 - Added an icon: a blue browser window with tabs behind it and a globe inside, on a dark rounded tile. It ships as `icon.png` and is declared in `plugin.json`.
 
