@@ -38,14 +38,25 @@
 
       const Q = window[NS];
       $page.id = "quickview-page";
+
+      // Acode's page object has no show() of its own; the docs expect the plugin to add one. Without it the
+      // launcher threw "this Acode page has no show()" and the page could not be reopened after Close.
+      $page.show = () => {
+        try {
+          const actionStack = acode.require("actionStack");
+          actionStack.push({ id: "quickview-page", action: () => $page.hide() });
+        } catch (_) {}
+        (window.app || document.body).append($page);
+        if (instance) instance.onShow();
+      };
+
       instance = new Q.QuickView($page);
       instance.init();
 
       openPage = () => {
         try {
-          if (typeof $page.show !== "function") throw new Error("this Acode page has no show()");
-          if (!$page.isConnected) $page.show();
-          instance.onShow();
+          if ($page.isConnected) instance.onShow();
+          else $page.show();
         } catch (error) {
           console.error("QuickView could not open", error);
           try { window.toast("QuickView could not open: " + error.message, 4000); } catch (_) {}

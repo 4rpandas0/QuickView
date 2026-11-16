@@ -1,0 +1,12 @@
+# built plugin packages
+*.zip
+!src/**
+
+# editor and OS noise
+.DS_Store
+Thumbs.db
+*.log
+
+# local tooling
+node_modules/
+package-lock.json

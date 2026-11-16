@@ -18,8 +18,10 @@
   color-scheme:dark;
 }
 
+/* Pinned to the screen rather than laid out inside Acode's page body, so the bar sits at the absolute top and
+   a collapsed body can't leave the embedded frame zero pixels tall. */
 #quickview {
-  position:relative; height:100%; min-height:0; display:flex; flex-direction:column; overflow:hidden;
+  position:fixed; inset:0; z-index:10; height:100vh; height:100dvh; min-height:0; display:flex; flex-direction:column; overflow:hidden;
   color:var(--primary-text-color,var(--qv-fg));
   background:var(--background-color,var(--qv-bg));
   font-family:system-ui,-apple-system,sans-serif;
@@ -28,19 +30,33 @@
 #quickview button { font:inherit; cursor:pointer; -webkit-tap-highlight-color:transparent; }
 #quickview .hidden { display:none !important; }
 
-/* ---- the one bar ---- */
-.qv-bar { display:flex; align-items:center; gap:8px; padding:8px 10px; flex:none; }
+/* ---- the one bar: back, address, forward, menu ---- */
+.qv-bar { display:flex; align-items:center; gap:4px; padding:8px 6px; flex:none; }
 .qv-url {
-  flex:1; min-width:0; height:38px; padding:0 14px; font-size:14px; outline:0;
-  border:1px solid var(--border-color,var(--qv-border)); border-radius:19px;
+  flex:1; min-width:0; height:40px; padding:0 14px; font-size:14px; outline:0;
+  border:1px solid var(--border-color,var(--qv-border)); border-radius:20px;
   background:var(--secondary-background-color,var(--qv-surface));
   color:var(--primary-text-color,var(--qv-fg));
 }
 .qv-url::placeholder { color:var(--secondary-text-color,var(--qv-muted)); opacity:.85; }
 .qv-url:focus { border-color:var(--qv-accent); }
-.qv-go { flex:none; height:38px; padding:0 16px; border:0; border-radius:19px; background:var(--qv-accent); color:var(--qv-accent-fg); font-size:13px; font-weight:700; }
-.qv-more { flex:none; width:38px; height:38px; border:0; border-radius:50%; background:transparent; color:inherit; font-size:22px; line-height:1; }
-.qv-more:active, .qv-more[aria-expanded="true"] { background:color-mix(in srgb,var(--qv-accent) 18%,transparent); }
+/* One standalone button: swap tabs, or make a tab when there is only one. The badge carries the count. */
+.qv-tab, .qv-more {
+  flex:none; width:40px; height:40px; display:grid; place-items:center; border:0; border-radius:50%;
+  background:transparent; color:inherit; padding:0; position:relative;
+}
+.qv-tab svg, .qv-more svg {
+  width:22px; height:22px; fill:none; stroke:currentColor; stroke-width:2;
+  stroke-linecap:round; stroke-linejoin:round;
+}
+.qv-tab-count {
+  position:absolute; right:3px; bottom:3px; min-width:14px; padding:0 3px;
+  border-radius:7px; background:var(--qv-accent); color:var(--qv-accent-fg);
+  font-size:9px; font-weight:700; line-height:14px; text-align:center;
+}
+.qv-tab:active, .qv-more:active, .qv-more[aria-expanded="true"] {
+  background:color-mix(in srgb,var(--qv-accent) 18%,transparent);
+}
 
 /* thin bar shown while the embedded view is loading */
 .qv-progress { position:relative; flex:none; height:2px; overflow:hidden; }
@@ -52,31 +68,73 @@
 
 /* ---- three-dot menu ---- */
 .qv-menu {
-  display:none; position:absolute; z-index:20; top:50px; right:10px; min-width:230px; padding:6px;
-  border:1px solid var(--border-color,var(--qv-border)); border-radius:14px;
+  display:none; position:absolute; z-index:20; top:58px; right:8px; width:236px; padding:6px;
+  border:1px solid var(--border-color,var(--qv-border)); border-radius:16px;
   background:var(--secondary-background-color,var(--qv-surface)); box-shadow:0 10px 30px var(--qv-shadow);
 }
 .qv-menu.open { display:block; }
-.qv-menu-row { display:flex; justify-content:space-between; margin-bottom:4px; padding-bottom:6px; border-bottom:1px solid var(--border-color,var(--qv-border)); }
-.qv-icon { width:48px; height:40px; border:0; border-radius:10px; background:transparent; color:inherit; font-size:22px; }
-.qv-icon:disabled { opacity:.35; }
-.qv-icon:active:not(:disabled), .qv-item:active { background:var(--border-color,var(--qv-border)); }
-.qv-item { display:flex; width:100%; align-items:center; justify-content:space-between; gap:12px; padding:11px 12px; border:0; border-radius:10px; background:transparent; color:inherit; text-align:left; font-size:13px; }
-.qv-check { min-width:1em; text-align:right; color:var(--qv-accent); font-weight:800; }
+
+/* the four you reach for most, as icons; everything else stays a labelled row below */
+.qv-icon-row {
+  display:grid; grid-template-columns:repeat(4, 1fr); gap:2px;
+  padding-bottom:6px; margin-bottom:4px;
+  border-bottom:1px solid var(--border-color,var(--qv-border));
+}
+.qv-icon-btn {
+  height:44px; display:grid; place-items:center; padding:0;
+  border:0; border-radius:12px; background:transparent; color:inherit;
+}
+.qv-icon-btn svg {
+  width:21px; height:21px; fill:none; stroke:currentColor; stroke-width:1.8;
+  stroke-linecap:round; stroke-linejoin:round;
+}
+.qv-icon-btn:disabled { opacity:.3; }
+.qv-icon-btn:active:not(:disabled) { background:color-mix(in srgb,var(--qv-accent) 20%,transparent); }
+.qv-icon-btn[aria-pressed="true"] { background:color-mix(in srgb,var(--qv-accent) 26%,transparent); color:var(--qv-accent); }
 
 /* ---- stage ---- */
-.qv-stage { position:relative; flex:1; min-height:0; overflow:hidden; touch-action:pan-y; }
-.qv-start { position:absolute; inset:0; overflow:auto; padding:26px 16px; }
-.qv-start-title { font-size:22px; font-weight:750; }
-.qv-start-sub { margin:6px 0 18px; color:var(--secondary-text-color,var(--qv-muted)); font-size:12px; line-height:1.5; }
-.qv-recent { display:flex; flex-direction:column; gap:6px; }
-.qv-recent-item { display:flex; flex-direction:column; align-items:flex-start; width:100%; padding:10px 12px; border:1px solid var(--border-color,var(--qv-border)); border-radius:12px; background:var(--secondary-background-color,var(--qv-surface)); color:inherit; text-align:left; }
-.qv-recent-host { font-size:13px; font-weight:700; }
-.qv-recent-path { max-width:100%; color:var(--secondary-text-color,var(--qv-muted)); font-size:11px; overflow-wrap:anywhere; }
+/* No stage element: the frame is positioned against #quickview itself, which is known to be full width. */
 
 /* Embedded sites assume a white canvas, so the frame stays white in both themes. */
-.qv-frame { position:absolute; inset:0; width:100%; height:100%; border:0; background:white; color-scheme:light; }
-.qv-desktop .qv-frame { width:1280px; max-width:none; transform-origin:top left; }
+/* Size comes from the script, in pixels. An iframe keeps its intrinsic 300x150 unless width and height are set. */
+.qv-frame {
+  position:absolute; left:0; top:52px; width:100%; height:100%; border:0;
+  background:white; color-scheme:light; overflow:hidden;
+}
+
+/* Shown in place of a blank frame, so a failure explains itself instead of looking empty. */
+.qv-notice {
+  position:absolute; left:0; right:0; bottom:0; top:56px; z-index:9; display:grid; place-items:center; padding:26px 20px; overflow:auto;
+  background:var(--background-color,var(--qv-bg)); color:var(--primary-text-color,var(--qv-fg));
+  font-size:13px; line-height:1.6; text-align:center; white-space:pre-line;
+}
+.qv-item {
+  display:flex; width:100%; align-items:center; justify-content:space-between; gap:12px;
+  padding:11px 12px; border:0; border-radius:10px; background:transparent; color:inherit;
+  text-align:left; font-size:13px;
+}
+.qv-item:active { background:var(--border-color,var(--qv-border)); }
+/* a row that does nothing on this page, like the console on a site that isn't localhost */
+.qv-item[data-disabled="true"] { opacity:.45; }
+/* a real checkbox: empty outline when off, filled with a tick when on */
+.qv-checkbox {
+  flex:none; width:18px; height:18px; border-radius:5px;
+  border:1.5px solid var(--border-color,var(--qv-border));
+  background:transparent; position:relative;
+}
+.qv-checkbox[data-on="true"] {
+  border-color:var(--qv-accent); background:var(--qv-accent);
+}
+.qv-checkbox[data-on="true"]::after {
+  content:""; position:absolute; left:5px; top:1.5px; width:4px; height:9px;
+  border:solid var(--qv-accent-fg); border-width:0 2px 2px 0; transform:rotate(45deg);
+}
+
+.qv-notice code { font:12px/1.5 ui-monospace,monospace; overflow-wrap:anywhere; }
+.qv-notice-action {
+  margin-top:14px; padding:10px 18px; border:0; border-radius:20px;
+  background:var(--qv-accent); color:var(--qv-accent-fg); font-size:13px; font-weight:600;
+}
 
 .qv-toast {
   position:absolute; z-index:8; left:50%; bottom:16px; max-width:calc(100% - 32px); padding:9px 14px;
@@ -86,7 +144,7 @@
 .qv-toast.show { opacity:1; transform:translate(-50%,0); }
 
 /* ---- drawers ---- */
-.qv-drawer { display:none; position:absolute; z-index:5; left:0; right:0; bottom:0; max-height:55%; overflow:auto; padding:11px; background:var(--secondary-background-color,var(--qv-surface)); border-top:1px solid var(--border-color,var(--qv-border)); box-shadow:0 -8px 22px var(--qv-shadow); }
+.qv-drawer { display:none; position:absolute; z-index:11; left:0; right:0; bottom:0; max-height:55%; overflow:auto; padding:11px; background:var(--secondary-background-color,var(--qv-surface)); border-top:1px solid var(--border-color,var(--qv-border)); box-shadow:0 -8px 22px var(--qv-shadow); }
 .qv-drawer.open { display:block; }
 .qv-drawer-title { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; font-size:13px; font-weight:700; }
 .qv-drawer button { border:0; border-radius:8px; padding:7px 10px; background:var(--qv-accent); color:var(--qv-accent-fg); font-size:11px; }

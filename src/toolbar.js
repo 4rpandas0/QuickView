@@ -26,16 +26,31 @@
     else header.append(button);
     if (!button.isConnected) return null;
 
-    // Acode's header handles touches itself, so a listener on the button may never run. Listen on the
-    // document in the capture phase instead and hit-test the tap against the button's on-screen box.
+    // Acode's header handles touches itself, so a listener on the button may never run. Listen on the document in
+    // the capture phase instead and hit-test the tap against the button's on-screen box.
+    //
+    // That box test alone let a tap on a *different* header icon (on the Files page, say) open QuickView, because
+    // the old icon's rectangle still covered that spot. So a tap is ignored only when we can positively identify
+    // another icon under the finger; anything else — the header itself, a swallowed event — still counts as ours.
+    const isOtherIcon = node => {
+      if (!node || typeof node.closest !== "function") return false;
+      const icon = node.closest(".icon");
+      return !!icon && icon !== button && !button.contains(icon);
+    };
+
     let lastFired = 0;
     const onTap = event => {
       if (!button.isConnected) return;
+
       const point = (event.changedTouches && event.changedTouches[0]) || event;
       const box = button.getBoundingClientRect();
       if (!box.width || !box.height) return;
       if (point.clientX < box.left || point.clientX > box.right) return;
       if (point.clientY < box.top || point.clientY > box.bottom) return;
+
+      let under = null;
+      try { under = document.elementFromPoint(point.clientX, point.clientY); } catch (_) {}
+      if (isOtherIcon(event.target) || isOtherIcon(under)) return;
 
       event.stopPropagation();
       event.preventDefault();
