@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.3
+- README rewritten for people using the plugin rather than reading its code: how to install and open it, how to set up Seekr with a SerpApi key, how searching works, the two tabs, the menu, the console and what happens on sites that refuse to open.
+
 ## 1.0.2
 - Author details in `plugin.json`: name, email (`4rpandas0@gmail.com`) and GitHub account (`4rpandas0`), so the marketplace listing links back to the source.
 

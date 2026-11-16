@@ -1,7 +1,7 @@
 {
   "id": "com.arpan.quickview",
   "name": "QuickView",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "main.js",
   "readme": "README.md",
   "minVersionCode": 967,

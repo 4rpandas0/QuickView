@@ -1,93 +1,79 @@
-# QuickView 1.0.2 — Minimal browser for Acode
+# QuickView
 
-One line at the top of the screen: a tab button, an address box, and a menu. Pages open in an iframe inside the
-plugin page, so the bar and the page live in the same place.
+A small browser inside Acode. One bar at the top of the screen — a tab button, an address box and a menu — and
+the page you're reading right below it. No switching apps to look something up while you're editing.
 
 ## Install
 
-1. Open Acode > Settings > Plugins.
-2. Tap + > LOCAL.
-3. Select QuickView.zip.
+1. Open Acode › Settings › Plugins.
+2. Tap **+**, then **LOCAL**.
+3. Pick `QuickView.zip`.
 
-## Open
+## Open it
 
 Tap the globe icon in Acode's top header, or run `quickview.open` from the command palette.
-If the header icon can't be added, QuickView falls back to the floating side button.
 
-## Home and search
+## Set up Seekr before you search
 
-Home is Seekr, at `https://seekr-4t0mj3.v2.appdeploy.ai/`. It is the page you land on, the page a new tab opens,
-and the search engine: anything typed into the address box that isn't a web address becomes a search there.
+QuickView's home page and search engine is Seekr, and Seekr gets its results from Google through **SerpApi**. That
+means Seekr needs your own SerpApi key before it will return anything:
 
-The query goes in as `?q=`. If Seekr reads a different parameter, change `SEARCH_URL` in `src/browser.js` — every
-search goes through that one line.
+1. Go to **serpapi.com** and sign in, or create a free account.
+2. Open your SerpApi dashboard and copy your **API key**.
+3. Open QuickView, let Seekr load, and paste the key into the field it asks for. It's kept for next time, so you
+   only do this once.
 
-## Top bar
+SerpApi's free plan gives you a limited number of searches each month; if results stop coming back, check your
+usage on their dashboard. The key stays with you — QuickView doesn't send it anywhere of its own.
 
-The bar sits at the absolute top of the screen; Acode's own page header is hidden. The address box navigates on
-Enter, and the keyboard's Go key submits it.
+## Searching
 
-The button on the left is the tab button, with a badge showing how many tabs are open. There are **two tabs at
-most**: tap it to swap to the other one, or to make a second one when you only have one.
+Type into the address box and press Enter, or tap the Go key on your keyboard.
 
-## Tabs and caching
+- Type a **web address** — `github.com`, `localhost:3000` — and it opens that page.
+- Type **anything else** — `how to center a div` — and it searches Seekr.
 
-Only the tab you are looking at holds a live page. Switching frees the page you left and keeps its address and
-history, so memory stays flat instead of growing with every tab.
+**Home** in the menu always takes you back to Seekr.
 
-The cache is made when QuickView closes, not while you browse: the page on screen at that moment is the one that
-comes back. The other tab keeps only its URL, and a page that was still loading is not cached at all — reopening
-then starts on the other tab, or Home.
+## Two tabs
 
-What survives a close is the address, not a rendered copy of the page: a cross-origin page can't be snapshotted,
-and Acode removes the plugin page from the DOM when you close it. The page comes back through the WebView's own
-HTTP cache.
+Tap the tab button on the left of the bar to switch to your other tab, or to open a second one if you only have
+one. The little badge on it shows how many tabs are open, and there are two at most.
 
-## Menu
+Each tab remembers its own address and its own back/forward history, so switching back puts you where you left.
+Only the tab you're looking at stays loaded in memory — that keeps QuickView light on a phone.
 
-Four icons along the top — back, forward, reload, home — and labelled rows below them:
+## The menu
 
-- **Desktop site** — renders the frame 1280px wide and scales it down. A check box shows when it's on.
-- **Open in system browser** — hands the current address to your browser.
-- **Console** — injects eruda into the page. See below.
-- **Localhost finder** — scans common dev ports on this device. Android WebView rules may block detection.
-- **Close QuickView** — the way back to the editor, since the page header is hidden.
+The four icons across the top are **back**, **forward**, **reload** and **home**. Below them:
 
-## Console
+- **Desktop site** — shows the page at desktop width, scaled to fit your screen. Handy for sites that hide
+  features on mobile. The check box shows when it's on.
+- **Open in system browser** — sends the current address to Chrome or whatever browser you use.
+- **Console** — a developer console for the page you're working on. See below.
+- **Localhost finder** — looks for dev servers running on this device.
+- **Close QuickView** — back to the editor.
 
-Toggling Console on fetches the current page, adds `<script src="https://cdn.jsdelivr.net/npm/eruda"></script>`
-and `eruda.init()` to its markup, and loads the result as a same-origin document, so eruda inspects the site rather
-than the plugin. Toggling it off puts the real page back.
+## Console, for localhost pages
 
-This is only possible where the page can be fetched and rewritten, so the row is enabled for **localhost pages
-only** and greyed out everywhere else. The dev server has to allow CORS — Vite does by default; if it doesn't,
-you get a toast instead of silence.
+If you're previewing a dev server — `localhost:3000`, `127.0.0.1:5173` — turn on **Console** and QuickView adds
+[eruda](https://github.com/liriliri/eruda) to that page, giving you console logs, network requests and the DOM for
+the site itself rather than for the plugin. Turn it off and the real page comes back.
 
-Because that page is rendered as a same-origin document, its own scripts run with this plugin's origin and can
-reach the plugin's DOM, storage and Acode's API. That is fine for a dev server you control; don't point it at a
-page you don't trust.
+It only works for localhost pages, and your dev server has to allow cross-origin requests (Vite does by default).
+If it doesn't, QuickView tells you instead of failing quietly.
 
-## Pages that refuse to be framed
+One thing to keep in mind: while the console is on, the page is loaded in a way that lets its own scripts reach the
+plugin. That's fine for a dev server you control — don't turn it on for a page you don't trust.
 
-Some sites send `X-Frame-Options` or a `frame-ancestors` policy and cannot be shown in a frame. That is a rule of
-the browser, not something a plugin can override. QuickView says so in place of the page and offers an
-**Open in system browser** button. It never hands the page to another view.
+## Pages that won't open
 
-## Files
+A few sites refuse to be shown inside another app. When that happens QuickView says so in place of the page and
+offers **Open in system browser**, so you can still get to it. Nothing is hidden or lost — the address stays in the
+bar, so Back still works.
 
-| File | Purpose |
-| --- | --- |
-| `main.js` | Entry point: loads `src/`, plugin lifecycle, command |
-| `src/styles.css` | Styling, with light and dark colour tokens |
-| `src/template.js` | Page markup: top bar, menu, notice |
-| `src/theme.js` | Light/dark detection (Acode theme, then system setting) |
-| `src/browser.js` | Tabs, caching, address handling, iframe control, console |
-| `src/toolbar.js` | Header icon and side-button fallback |
+## Good to know
 
-## Notes
-
-- Acode documents no API for adding buttons to its header, so the header icon is best effort. It only reacts to
-  taps that land on the icon itself, never on another header icon that happens to sit in the same place.
-- Tabs, their history and the cached page are kept in `localStorage` under `quickview.tabs`.
-
-See `CHANGELOG.md` for version history.
+- Your tabs and the page you were last reading are saved when you close QuickView, and come back when you open it
+  again — even after restarting Acode.
+- If the globe icon can't be added to Acode's header, QuickView falls back to a floating button on the right edge.
